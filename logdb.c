@@ -1,4 +1,4 @@
-/*	$Id: logdb.c,v 1.24 2014/01/01 04:48:09 ryo Exp $	*/
+/*	$Id: logdb.c,v 1.25 2014/01/01 05:32:15 ryo Exp $	*/
 
 /*-
  * Copyright (c) 2013 SHIMIZU Ryo <ryo@nerv.org>
@@ -514,7 +514,7 @@ dat_save(time_t next_interval)
 	struct data *data;
 	struct addr *addr;
 
-	if ((lastsave != 0) && (lastsave + next_interval) < monotonic_now.tv_sec)
+	if ((lastsave != 0) && (lastsave + next_interval) > monotonic_now.tv_sec)
 		return -1;
 	lastsave = monotonic_now.tv_sec;
 
