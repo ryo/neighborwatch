@@ -1,4 +1,4 @@
-/*	$Id: neighborwatch.c,v 1.21 2014/01/01 04:48:09 ryo Exp $	*/
+/*	$Id: neighborwatch.c,v 1.22 2014/01/01 04:55:51 ryo Exp $	*/
 
 /*-
  * Copyright (c) 2013 SHIMIZU Ryo <ryo@nerv.org>
@@ -104,8 +104,8 @@ usage(void)
 	fprintf(stderr, "	-v		verbose\n");
 	fprintf(stderr, "	-d		Run in debug mode, with all the output to stderr,\n");
 	fprintf(stderr, "			and will not detach and does not become a daemon.\n");
-	fprintf(stderr, "	-i [minutes]	specify interval of dat save (default:15\n");
-	fprintf(stderr, "	-e [minutes]	specify time of address expire (default:2880)\n");
+	fprintf(stderr, "	-i [seconds]	specify interval of dat save (default:900\n");
+	fprintf(stderr, "	-e [seconds]	specify time of address expire (default:86400)\n");
 }
 
 void
