@@ -30,4 +30,5 @@ TODO
 
 * dhcp discover
 * other major broadcast protocols (samba, UPnP, dropbox, etc)
+* LLDP
 * active scan
