@@ -1,4 +1,4 @@
-/*	$Id: neighborwatch.c,v 1.20 2013/12/31 19:22:35 ryo Exp $	*/
+/*	$Id: neighborwatch.c,v 1.21 2014/01/01 04:48:09 ryo Exp $	*/
 
 /*-
  * Copyright (c) 2013 SHIMIZU Ryo <ryo@nerv.org>
@@ -87,7 +87,7 @@ int promisc = 1;
 int sighup;
 int siginfo;
 int sigterm;
-int datsave_interval = 15 * 600;	/* second */
+int datsave_interval = 15 * 60;	/* second */
 
 pid_t pid;
 int logging_opened;
@@ -100,7 +100,6 @@ static void
 usage(void)
 {
 	fprintf(stderr, "usage: neighborwatch [options] [interface [...]]\n");
-	fprintf(stderr, "	-D <dir>	log directory\n");
 	fprintf(stderr, "	-p		Don't put the interface into promiscuous mode\n");
 	fprintf(stderr, "	-v		verbose\n");
 	fprintf(stderr, "	-d		Run in debug mode, with all the output to stderr,\n");
@@ -371,14 +370,19 @@ int
 main(int argc, char *argv[])
 {
 	struct sigaction sa;
-	int ch, rc;
+	int ch, expiretime, rc;
 
-	while ((ch = getopt(argc, argv, "D:dpv")) != -1) {
+	expiretime = 0;
+	while ((ch = getopt(argc, argv, "D:deipv")) != -1) {
 		switch (ch) {
-		case 'D':
-			break;
 		case 'd':
 			neighborwatch_debug = 1;
+			break;
+		case 'e':
+			expiretime = strtol(optarg, NULL, 10);
+			break;
+		case 'i':
+			datsave_interval = strtol(optarg, NULL, 10);
 			break;
 		case 'p':
 			promisc = 0;
@@ -446,7 +450,7 @@ main(int argc, char *argv[])
 	sigaction(SIGINFO, &sa, NULL);
 	sigaction(SIGTERM, &sa, NULL);
 
-	logdb_init();
+	logdb_init(expiretime);
 	oui_reload();	/* load "ethercodes.dat" */
 
 	logdb_clock(0);	/* for initialize timer */

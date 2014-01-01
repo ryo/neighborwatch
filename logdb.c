@@ -1,4 +1,4 @@
-/*	$Id: logdb.c,v 1.23 2013/12/31 16:52:46 ryo Exp $	*/
+/*	$Id: logdb.c,v 1.24 2014/01/01 04:48:09 ryo Exp $	*/
 
 /*-
  * Copyright (c) 2013 SHIMIZU Ryo <ryo@nerv.org>
@@ -87,6 +87,7 @@ TIMEWHEELQ_HEAD(, addr, MAXTABLE) timewheel_addr_head;
 struct timespec monotonic_now;
 struct timespec realtime_now;
 static int logdb_logging = 0;
+static int data_expire_second = DATA_EXPIRE_SECOND;
 
 void
 logdb_log_enable(int on)
@@ -340,8 +341,11 @@ data_expire_check(void)
 }
 
 int
-logdb_init(void)
+logdb_init(int expiretime)
 {
+	if (expiretime)
+		data_expire_second = expiretime;
+
 	TIMEWHEELQ_INIT(&timewheel_addr_head, MAXTABLE);
 	RB_INIT(&logdb_tree_head);
 	return 0;

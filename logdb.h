@@ -1,4 +1,4 @@
-/*	$Id: logdb.h,v 1.8 2013/12/31 19:22:35 ryo Exp $	*/
+/*	$Id: logdb.h,v 1.9 2014/01/01 04:48:09 ryo Exp $	*/
 
 /*-
  * Copyright (c) 2013 SHIMIZU Ryo <ryo@nerv.org>
@@ -44,7 +44,7 @@
 
 
 void logdb_log_enable(int);
-int logdb_init(void);
+int logdb_init(int);
 int logdb_appear(int, struct ether_addr *, int, void *);
 int logdb_clock(int);
 
