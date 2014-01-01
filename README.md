@@ -12,10 +12,22 @@ feature
 * support IPv6 (neighbor discovery)
 
 
+install
+=======
+
+	# make
+	# make install
+
+usage
+=====
+
+e.g.)
+	neighborwatch -d wm0
+
+
 TODO
 ====
 
 * dhcp discover
-* samba
-* other major broadcast protocols (UPnP, dropbox, etc)
+* other major broadcast protocols (samba, UPnP, dropbox, etc)
 * active scan
