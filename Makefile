@@ -28,7 +28,7 @@ cleandir: clean
 	-rm -fr *.d .depend
 
 install: $(PROGRAM) ethercodes.dat
-	install -d -m 0644 $(PREFIX)/lib/neighborwatch/
+	install -d -m 0755 $(PREFIX)/lib/neighborwatch/
 	install -m 0755 neighborwatch $(PREFIX)/bin/
 	install -m 0644 ethercodes.dat $(PREFIX)/lib/neighborwatch/
 
