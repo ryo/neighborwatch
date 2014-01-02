@@ -1,4 +1,4 @@
-/*	$Id: logdb.c,v 1.25 2014/01/01 05:32:15 ryo Exp $	*/
+/*	$Id: logdb.c,v 1.26 2014/01/02 22:30:00 ryo Exp $	*/
 
 /*-
  * Copyright (c) 2013 SHIMIZU Ryo <ryo@nerv.org>
@@ -421,7 +421,8 @@ logdb_dump(void)
 void
 logether(const char *msg, struct data *data)
 {
-	logging(LOG_INFO, "%s %s", msg, strmacaddr(&data->key.eaddr));
+	logging(LOG_INFO, "%s %s (%s)", msg, strmacaddr(&data->key.eaddr),
+	    oui_lookup(&data->key.eaddr));
 }
 
 void
