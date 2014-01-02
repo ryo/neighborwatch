@@ -1,4 +1,4 @@
-/*	$Id: neighborwatch.c,v 1.22 2014/01/01 04:55:51 ryo Exp $	*/
+/*	$Id: neighborwatch.c,v 1.23 2014/01/02 22:22:19 ryo Exp $	*/
 
 /*-
  * Copyright (c) 2013 SHIMIZU Ryo <ryo@nerv.org>
@@ -432,7 +432,7 @@ main(int argc, char *argv[])
 		}
 #else
 		if (pidfile(PATH_NEIGHBORWATCH_PID) != 0) {
-			logging(LOG_ERR, "failed to write a pid file: %s\n", PATH_NEIGHBORWATCH_PID);
+			logging(LOG_ERR, "failed to write a pid file: %s", PATH_NEIGHBORWATCH_PID);
 			return 4;
 		}
 #endif

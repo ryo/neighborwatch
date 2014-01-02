@@ -1,4 +1,4 @@
-/*	$Id: oui.c,v 1.2 2013/12/27 14:54:41 ryo Exp $	*/
+/*	$Id: oui.c,v 1.3 2014/01/02 22:22:19 ryo Exp $	*/
 
 /*-
  * Copyright (c) 2013 SHIMIZU Ryo <ryo@nerv.org>
@@ -88,7 +88,7 @@ oui_reload(void)
 
 	fp = fopen(NEIGHBORWATCH_ETHERCODEDAT, "r");
 	if (fp == NULL) {
-		logging(LOG_WARNING, "open: %s: %s\n",
+		logging(LOG_WARNING, "open: %s: %s",
 		    NEIGHBORWATCH_ETHERCODEDAT, strerror(errno));
 		return;
 	}
