@@ -35,8 +35,8 @@ install: $(PROGRAM) ethercodes.dat
 
 ethercodes.dat:
 	mv -f ethercodes.dat ethercodes.dat.bak || true
-	wget http://standards.ieee.org/regauth/oui/oui.txt
-	perl ./ouitxt_convert.pl oui.txt > ethercodes.dat
+	wget -O oui.txt http://standards.ieee.org/regauth/oui/oui.txt
+	perl ./ouitxt_convert.pl oui.txt | sort > ethercodes.dat || true
 
 neighborwatch_bpf.o: neighborwatch.h packet.h
 ltsv.o: ltsv.h

@@ -1,4 +1,4 @@
-/*	$Id: neighborwatch.c,v 1.23 2014/01/02 22:22:19 ryo Exp $	*/
+/*	$Id: neighborwatch.c,v 1.24 2014/01/06 05:19:44 ryo Exp $	*/
 
 /*-
  * Copyright (c) 2013 SHIMIZU Ryo <ryo@nerv.org>
@@ -50,14 +50,6 @@
 #include "logdb.h"
 #include "oui.h"
 
-#ifndef RT_ROUNDUP
-#define RT_ROUNDUP(a) \
-	((a) > 0 ? (1 + (((a) - 1) | (sizeof(long) - 1))) : sizeof(long))
-#endif
-#ifndef RT_ADVANCE
-#define RT_ADVANCE(x, n) (x += RT_ROUNDUP((n)->sa_len))
-#endif
-
 struct iflist_item {
 	TAILQ_ENTRY(iflist_item) list;
 	int fd;
@@ -78,18 +70,16 @@ int iflist_deleteall(struct iflist_head *);
 int iflist_count(struct iflist_head *);
 static void sighandler(int);
 
-int neighborwatch_debug;
-
 struct iflist_head iflist = TAILQ_HEAD_INITIALIZER(iflist);
 
+pid_t pid;
+int neighborwatch_debug;
 int verbose;
 int promisc = 1;
 int sighup;
 int siginfo;
 int sigterm;
 int datsave_interval = 15 * 60;	/* second */
-
-pid_t pid;
 int logging_opened;
 
 unsigned int pktbufsize = PKTBUFSIZE;
@@ -286,27 +276,20 @@ neighborwatch_main(int argc, char *argv[])
 	}
 
 	TAILQ_FOREACH(ifitem, &iflist, list)
-		logging(LOG_DEBUG, "neighborwatch: listening on %s", ifitem->ifname);
+		logging(LOG_DEBUG, "listening on %s", ifitem->ifname);
 
 	/*
 	 * daemon loop
 	 */
 	for (ret = 0;;) {
-		if (sighup || sigterm || siginfo)
-			dat_save(0);
-
 		if (sighup || sigterm)
 			goto neighborwatch_done;
 
 		if (siginfo) {
 			if (neighborwatch_debug) {
 				TAILQ_FOREACH(ifitem, &iflist, list)
-					logging(LOG_INFO, "neighborwatch: listening on %s (fd=%d)", ifitem->ifname, ifitem->fd);
-				printf("----------------- ------------------- ------------------- -------- -------------------------------------------\n");
-				printf("mac address       appearance time     disappearance time      vlan address\n");
-				printf("----------------- ------------------- ------------------- -------- -------------------------------------------\n");
+					logging(LOG_DEBUG, "listening on %s (fd=%d)", ifitem->ifname, ifitem->fd);
 				logdb_dump();
-				printf("=============================================================================\n");
 			}
 
 			siginfo = 0;
@@ -463,11 +446,18 @@ main(int argc, char *argv[])
 		if (rc != 0)
 			break;
 
-		if (sigterm)
+		if (sigterm) {
+			dat_save(0);
+			sigterm = 0;
 			break;
+		}
 
-		if (sighup)
+		if (sighup) {
+			oui_reload();	/* load "ethercodes.dat" */
+			logging(LOG_INFO, "reload %s", NEIGHBORWATCH_ETHERCODEDAT);
+			dat_save(0);
 			sighup = 0;
+		}
 	}
 
 	logging(LOG_INFO, "terminated");

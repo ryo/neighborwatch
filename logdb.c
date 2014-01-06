@@ -1,4 +1,4 @@
-/*	$Id: logdb.c,v 1.26 2014/01/02 22:30:00 ryo Exp $	*/
+/*	$Id: logdb.c,v 1.27 2014/01/06 05:19:44 ryo Exp $	*/
 
 /*-
  * Copyright (c) 2013 SHIMIZU Ryo <ryo@nerv.org>
@@ -180,34 +180,6 @@ timestamp(time_t t)
 	strftime(tstamp, sizeof(tstamp), "%F %T", &ltime);
 
 	return tstamp;
-}
-
-static void
-dump_data(struct data *data)
-{
-	struct addr *addr;
-	int i;
-
-	printf("%s ",
-	    strmacaddr(&data->key.eaddr));
-
-	printf("%s ", timestamp(data->appearance_time));
-	if (data->disappearance_time != 0)
-		printf("%s ", timestamp(data->disappearance_time));
-	else
-		printf("-                   ");
-
-	i = 0;
-	LIST_FOREACH(addr, &data->addrlist, list) {
-		if (i == 0)
-			i++;
-		else
-			printf("                                                          ");
-
-		dump_addr(addr, 1);
-	}
-	if (i == 0)
-		printf("\n");
 }
 
 static inline int
@@ -408,14 +380,46 @@ logdb_realtime2monotonic(time_t t)
 	return t - dif;
 }
 
+static void
+dump_data(struct data *data)
+{
+	struct addr *addr;
+	int i;
+
+	printf("%s ",
+	    strmacaddr(&data->key.eaddr));
+
+	printf("%s ", timestamp(data->appearance_time));
+	if (data->disappearance_time != 0)
+		printf("%s ", timestamp(data->disappearance_time));
+	else
+		printf("-                   ");
+
+	i = 0;
+	LIST_FOREACH(addr, &data->addrlist, list) {
+		if (i == 0)
+			i++;
+		else
+			printf("                                                          ");
+
+		dump_addr(addr, 1);
+	}
+	if (i == 0)
+		printf("\n");
+}
+
 void
 logdb_dump(void)
 {
 	struct data *data;
 
+	printf("----------------- ------------------- ------------------- -------- -------------------------------------------\n");
+	printf("mac address       appearance time     disappearance time      vlan address\n");
+	printf("----------------- ------------------- ------------------- -------- -------------------------------------------\n");
 	RB_FOREACH(data, logdb, &logdb_tree_head) {
 		dump_data(data);
 	}
+	printf("=============================================================================\n");
 }
 
 void
