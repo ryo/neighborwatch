@@ -198,8 +198,7 @@ timewheel_reset(struct data *data, struct addr *addr)
 {
 	TIMEWHEELQ_REMOVE(addr, timetable);
 	TIMEWHEELQ_INSERT_HEAD(&timewheel_addr_head,
-	    addr->lastseen + DATA_EXPIRE_SECOND - monotonic_now.tv_sec,
-	    addr, timetable);
+	    DATA_EXPIRE_SECOND, addr, timetable);
 	LIST_REMOVE(addr, list);
 	LIST_INSERT_HEAD(&data->addrlist, addr, list);
 }
